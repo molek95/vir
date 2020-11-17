@@ -1,0 +1,18 @@
+<mat-card>
+  <mat-card-content>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3">
+          <mat-form-field appearance="outline" class="w-100">
+            <mat-label>Request Method</mat-label>
+            <mat-select [(value)]="selectedRequestMethod">
+              <mat-option *ngFor="let method of requestMethods" [value]="method">
+                {{ method }}
+              </mat-option>
+            </mat-select>  
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
