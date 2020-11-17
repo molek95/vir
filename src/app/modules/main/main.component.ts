@@ -9,6 +9,9 @@ export class MainComponent implements OnInit {
 
   selectedRequestMethod: string;
   requestMethods: Array<string>;
+  endpoint: string;
+  isLoading: boolean;
+  responseData: any;
 
   constructor() {
     this.selectedRequestMethod = 'GET';
@@ -16,9 +19,15 @@ export class MainComponent implements OnInit {
       'GET',
       'POST'
     ];
+    this.endpoint = '';
+    this.isLoading = false;
   }
 
   ngOnInit() {
+  }
+
+  sendRequest(): void {
+    console.log('SEND REQUEST');
   }
 
 }
