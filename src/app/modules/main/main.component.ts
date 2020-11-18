@@ -64,6 +64,20 @@ export class MainComponent implements OnInit {
     return false;
   }
 
+  constructObject(ctx: string) {
+    let context;
+    if (ctx === 'Body') {
+      context = this.requestBody;
+    }
+
+    let constructedObject = {};
+    constructedObject = context.reduce((object, item) => {
+      object[item.key] = item.value;
+      return object;
+    }, {});
+    return constructedObject;
+  }
+
   sendRequest(): void {
     this.endpointError = '';
     this.responseError = '';
@@ -94,7 +108,7 @@ export class MainComponent implements OnInit {
         break;
       }
       case 'POST': {
-        this.mainService.sendPostRequest(this.endpoint).subscribe(res => {
+        this.mainService.sendPostRequest(this.endpoint, this.constructObject('Body')).subscribe(res => {
           this.isLoading = false;
           this.responseData = JSON.stringify(res, undefined, 4);
         },
@@ -110,6 +124,8 @@ export class MainComponent implements OnInit {
     this.selectedRequestMethod = '';
     this.endpoint = '';
     this.endpointError = '';
+    this.requestBody = [{key: '', value: ''}];
+    this.requestBody = [''];
   }
 
 }

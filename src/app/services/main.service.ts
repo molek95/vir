@@ -13,8 +13,8 @@ export class MainService {
     return this.httpClient.get(url);
   }
 
-  sendPostRequest(url: string) {
+  sendPostRequest(url: string, requestBody: any) {
     console.log('POST REQUEST');
-    return this.httpClient.post(url, {});
+    return this.httpClient.post(url, requestBody);
   }
 }
