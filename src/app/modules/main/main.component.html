@@ -16,9 +16,40 @@
           <mat-form-field appearance="outline" class="w-100">
             <mat-label>API Endpoint</mat-label>
             <input type="url" matInput placeholder="Type URL here!" [(ngModel)]="endpoint">
+            <span *ngIf="endpointError != ''" style="color: red"> {{ endpointError }} </span>
           </mat-form-field>
         </div>
       </div>
+
+      <section *ngIf="selectedRequestMethod == 'POST'">
+        <mat-tab-group>
+          <mat-tab label="Body">
+            <div class="container-fluid" style="padding: 1rem;">
+              <div class="row">
+                <div class="col-md-4">
+                  <strong>Key</strong>
+                </div>
+                <div class="col-md-4">
+                  <strong>Value</strong>
+                </div>
+                <div class="col-md-3">
+                  <strong>Data Type</strong>
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let item of requestBody; let index = index" class="container-fluid">
+              <div class="row">
+                <div class="col-md-4">
+                  <mat-form-field class="w-100">
+                    <input matInput [(ngModel)]="item.key">
+                  </mat-form-field>
+                  
+                </div>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </section>
 
       <button mat-flat-button
        color="primary"
@@ -35,6 +66,7 @@
           mode="indeterminate"
         ></mat-progress-spinner>
         <pre *ngIf="responseData" class="response-data">{{ responseData }}</pre>
+        <pre *ngIf="responseError" class="response-error">{{ responseError }}</pre>
       </div>
 
     </div>
