@@ -15,6 +15,10 @@ export class MainComponent implements OnInit {
   responseData: any;
   responseError: string;
   endpointError: string;
+  
+  requestBody: any;
+  requestBodyDataTypes: any;
+  dataTypes: any;
 
   constructor(private mainService: MainService) {
     this.selectedRequestMethod = 'GET';
@@ -25,13 +29,39 @@ export class MainComponent implements OnInit {
     this.endpoint = '';
     this.responseError = '';
     this.isLoading = false;
+    this.dataTypes = [
+      'Number',
+      'Boolean',
+      'String'
+    ];
+    this.requestBody = [{key: '', value: ''}];
+    this.requestBodyDataTypes = [''];
   }
 
   ngOnInit() { }
 
   private validateEndpoint(url: string) {
+    // tslint:disable-next-line: max-line-length
     const urlRegExp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm;
     return urlRegExp.test(url);
+  }
+
+  addItem() {
+    this.requestBody.push({key: '', value: ''});
+    this.requestBodyDataTypes.push('');
+  }
+
+  removeItem(i: number) {
+    this.requestBody.splice(i, 1);
+  }
+
+  isAddDisabled() {
+    if (this.requestBody.length > 0) {
+      if (this.requestBody[this.requestBody.length - 1].key === '' || this.requestBody[this.requestBody.length -1]. value === '') {
+        return true;
+      }
+    }
+    return false;
   }
 
   sendRequest(): void {
