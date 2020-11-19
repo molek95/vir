@@ -11,13 +11,16 @@ export class MainComponent implements OnInit {
   selectedRequestMethod: string;
   requestMethods: Array<string>;
   endpoint: string;
+
   isLoading: boolean;
+
   responseData: any;
   responseError: string;
   endpointError: string;
-  
+
   requestBody: any;
   requestBodyDataTypes: any;
+  requestHeaders: any;
   dataTypes: any;
 
   constructor(private mainService: MainService) {
@@ -36,6 +39,7 @@ export class MainComponent implements OnInit {
     ];
     this.requestBody = [{key: '', value: ''}];
     this.requestBodyDataTypes = [''];
+    this.requestHeaders = [{key: 'Content-Type', value: 'application/json'}];
   }
 
   ngOnInit() { }
@@ -46,18 +50,44 @@ export class MainComponent implements OnInit {
     return urlRegExp.test(url);
   }
 
-  addItem() {
-    this.requestBody.push({key: '', value: ''});
-    this.requestBodyDataTypes.push('');
+  addItem(ctx: string) {
+    let context;
+
+    if (ctx === 'Body') {
+      context = this.requestBody;
+    } else if (ctx === 'Headers') {
+      context = this.requestHeaders;
+    }
+
+    context.push({key: '', value: ''});
+    if (ctx === 'Body') {
+      this.requestBodyDataTypes.push('');
+    }
   }
 
-  removeItem(i: number) {
-    this.requestBody.splice(i, 1);
+  removeItem(i: number, ctx: string) {
+    let context;
+
+    if (ctx === 'Body') {
+      context = this.requestBody;
+    } else if (ctx === 'Headers') {
+      context = this.requestHeaders;
+    }
+
+    context.splice(i, 1);
   }
 
-  isAddDisabled() {
-    if (this.requestBody.length > 0) {
-      if (this.requestBody[this.requestBody.length - 1].key === '' || this.requestBody[this.requestBody.length -1]. value === '') {
+  isAddDisabled(ctx: string) {
+    let context;
+
+    if (ctx === 'Body') {
+      context = this.requestBody;
+    } else if (ctx === 'Headers') {
+      context = this.requestHeaders;
+    }
+
+    if (context.length > 0) {
+      if (context[context.length - 1].key === '' || context[context.length -1]. value === '') {
         return true;
       }
     }
@@ -68,6 +98,8 @@ export class MainComponent implements OnInit {
     let context;
     if (ctx === 'Body') {
       context = this.requestBody;
+    } else if (ctx === 'Headers') {
+      context = this.requestHeaders;
     }
 
     let constructedObject = {};
@@ -97,7 +129,7 @@ export class MainComponent implements OnInit {
 
     switch (this.selectedRequestMethod) {
       case 'GET': {
-        this.mainService.sendGetRequest(this.endpoint).subscribe(res => {
+        this.mainService.sendGetRequest(this.endpoint, this.constructObject('Headers')).subscribe(res => {
           this.isLoading = false;
           this.responseData = JSON.stringify(res, undefined, 4);
         },
@@ -108,7 +140,7 @@ export class MainComponent implements OnInit {
         break;
       }
       case 'POST': {
-        this.mainService.sendPostRequest(this.endpoint, this.constructObject('Body')).subscribe(res => {
+        this.mainService.sendPostRequest(this.endpoint, this.constructObject('Body'), this.constructObject('Headers')).subscribe(res => {
           this.isLoading = false;
           this.responseData = JSON.stringify(res, undefined, 4);
         },
@@ -121,11 +153,12 @@ export class MainComponent implements OnInit {
       }
     }
 
-    this.selectedRequestMethod = '';
+    this.selectedRequestMethod = 'GET';
     this.endpoint = '';
     this.endpointError = '';
     this.requestBody = [{key: '', value: ''}];
     this.requestBody = [''];
+    this.requestHeaders = [{key: 'Content-Type', value: 'application/json'}];
   }
 
 }

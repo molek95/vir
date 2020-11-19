@@ -21,9 +21,54 @@
         </div>
       </div>
 
-      <section *ngIf="selectedRequestMethod == 'POST'">
+      <!-- POST params -->
+      <section>
         <mat-tab-group>
-          <mat-tab label="Body">
+          <mat-tab label="Headers">
+            <div class="container-fluid" style="padding: 1rem">
+              <div class="row">
+                <div class="col-md-5">
+                  <strong>Key</strong>
+                </div>
+                <div class="col-md-7">
+                  <strong>Value</strong>
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let item of requestHeaders; let i = index" class="container-fluid">
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field class="w-100">
+                    <input matInput [disabled]="item.key === 'Content-Type'" [(ngModel)]="item.key">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <input matInput [disabled]="item.key === 'Content-Type'" [(ngModel)]="item.value">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button mat-button 
+                    [disabled]="item.key === 'Content-Type'"
+                    color="warn"
+                    class="d-block mx-auto"
+                    style="outline: none;"
+                    (click)="removeItem(i, 'Headers')">
+                      <i class="material-icons">highlight_off</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button mat-flat-button
+              color="accent"
+              [disabled]="isAddDisabled('Headers')"
+              style="outline: none;"
+              (click)="addItem('Headers')">
+                <span>ADD ITEM</span>
+            </button>
+          </mat-tab>
+
+          <mat-tab label="Body" *ngIf="selectedRequestMethod == 'POST'">
             <div class="container-fluid" style="padding: 1rem;">
               <div class="row">
                 <div class="col-md-4">
@@ -69,7 +114,7 @@
                   </mat-form-field>
                 </div>
                 <div class="col-md-1">
-                  <button mat-button color="warn" class="d-block mx-auto" style="outline: none;" (click)="removeItem(i)">
+                  <button mat-button color="warn" class="d-block mx-auto" style="outline: none;" (click)="removeItem(i, 'Body')">
                     <i class="material-icons">highlight_off</i>
                   </button>
                 </div>
@@ -77,12 +122,61 @@
             </div>
             <button mat-flat-button
               color="accent"
-              [disabled]="isAddDisabled()"
+              [disabled]="isAddDisabled('Body')"
               style="outline:none;"
-              (click)="addItem()">
+              (click)="addItem('Body')">
               ADD ITEM
             </button>
           </mat-tab>
+        </mat-tab-group>
+      </section>
+
+      <!-- HEADERS -->
+      <section>
+        <mat-tab-group>
+          <!-- <mat-tab label="Headers">
+            <div class="container-fluid" style="padding: 1rem">
+              <div class="row">
+                <div class="col-md-5">
+                  <strong>Key</strong>
+                </div>
+                <div class="col-md-7">
+                  <strong>Value</strong>
+                </div>
+              </div>
+            </div>
+            <div *ngFor="let item of requestHeaders; let i = index" class="container-fluid">
+              <div class="row">
+                <div class="col-md-5">
+                  <mat-form-field class="w-100">
+                    <input matInput [disabled]="item.key === 'Content-Type'" [(ngModel)]="item.key">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-6">
+                  <mat-form-field class="w-100">
+                    <input matInput [disabled]="item.key === 'Content-Type'" [(ngModel)]="item.value">
+                  </mat-form-field>
+                </div>
+                <div class="col-md-1">
+                  <button mat-button 
+                    [disabled]="item.key === 'Content-Type'"
+                    color="warn"
+                    class="d-block mx-auto"
+                    style="outline: none;"
+                    (click)="removeItem(i, 'Headers')">
+                      <i class="material-icons">highlight_off</i>
+                  </button>
+                </div>
+              </div>
+            </div>
+            <button mat-flat-button
+              color="accent"
+              [disabled]="isAddDisabled('Headers')"
+              style="outline: none;"
+              (click)="addItem('Headers')">
+                <span>ADD ITEM</span>
+            </button>
+          </mat-tab> -->
         </mat-tab-group>
       </section>
 
