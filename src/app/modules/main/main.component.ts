@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { MainService } from 'src/app/services/main.service';
 
 @Component({
@@ -7,6 +7,10 @@ import { MainService } from 'src/app/services/main.service';
   styleUrls: ['./main.component.less']
 })
 export class MainComponent implements OnInit {
+
+  @Input() indexedDB: any;
+  @Input() openIndexedDBRequest: any;
+  @Output() newRequest = new EventEmitter();
 
   selectedRequestMethod: string;
   requestMethods: Array<string>;
@@ -153,12 +157,62 @@ export class MainComponent implements OnInit {
       }
     }
 
+    this.saveRequest(this.selectedRequestMethod);
+    this.newRequest.emit();
+
     this.selectedRequestMethod = 'GET';
     this.endpoint = '';
     this.endpointError = '';
     this.requestBody = [{key: '', value: ''}];
     this.requestBody = [''];
     this.requestHeaders = [{key: 'Content-Type', value: 'application/json'}];
+  }
+
+  saveRequest(requestType: string) {
+    const requestObject = {
+      endpoint: this.endpoint,
+      method: this.selectedRequestMethod,
+      headers: this.constructObject('Headers')
+    };
+    if (requestType === 'POST') {
+      requestObject['body'] = this.constructObject('Body');
+    }
+    const transaction = this.indexedDB.transaction('requestHistory', 'readwrite');
+
+    const requestHistoryStore = transaction.objectStore('requestHistory');
+    requestHistoryStore.add(requestObject);
+  }
+
+
+  loadRequestHistory(request: any) {
+    this.selectedRequestMethod = request.method;
+    this.endpoint = request.endpoint;
+    this.requestHeaders = this.deconstructObject(request.headers, 'Headers');
+    if (request.method === 'POST') {
+      this.requestBody = this.deconstructObject(request.body, 'Body');
+    }
+  }
+
+  deconstructObject(object: any, type: string) {
+    const objectArray = [];
+    switch (type) {
+      case 'Body': {
+        Object.keys(object).forEach((objKey, index) => {
+          this.requestBodyDataTypes[index] = 'String';
+          const obj = { key: objKey, value: '' };
+          objectArray.push(obj);
+        });
+        break;
+      }
+      case 'Headers': {
+        Object.keys(object).forEach(objKey => {
+          const obj = { key: objKey, value: object[objKey] };
+          objectArray.push(obj);
+        });
+        break;
+      }
+    }
+    return objectArray;
   }
 
 }

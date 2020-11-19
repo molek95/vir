@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { MainComponent } from './modules/main/main.component';
 
 @Component({
   selector: 'app-root',
@@ -6,11 +7,15 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./app.component.less']
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild(MainComponent) mainParams: MainComponent;
+
+
   hasIndexedDB: boolean;
   indexedDB: any;
   openIndexedDBRequest: any;
   idbStore: any;
-  requestHistory: any;
+  requestHistory: any = [];
 
 
   constructor() {
@@ -19,6 +24,10 @@ export class AppComponent implements OnInit {
 
   ngOnInit() {
     this.openIndexedDB();
+  }
+
+  loadRequestHandler(request: any) {
+    this.mainParams.loadRequestHistory(request);
   }
 
   openIndexedDB() {
@@ -51,6 +60,7 @@ export class AppComponent implements OnInit {
     const requestHistoryStore = transaction.objectStore('requestHistory');
     requestHistoryStore.getAll().onsuccess = (e: any) => {
       this.requestHistory = e.target.result;
+      console.log(this.requestHistory)
     };
   }
 

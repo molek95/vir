@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-history',
@@ -6,10 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./history.component.less']
 })
 export class HistoryComponent implements OnInit {
+  @Input() requestHistory: any;
+  @Output() loadRequest = new EventEmitter();
 
   constructor() { }
 
   ngOnInit() {
+  }
+
+  load(req: any) {
+    this.loadRequest.emit(req);
   }
 
 }
