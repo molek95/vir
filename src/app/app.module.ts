@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from './modules/main/main.module';
 import { HttpClientModule } from '@angular/common/http';
-
+import { HistoryModule } from './modules/history/history.module';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,8 @@ import { HttpClientModule } from '@angular/common/http';
     AppRoutingModule,
     BrowserAnimationsModule,
     MainModule,
-    HttpClientModule
+    HttpClientModule,
+    HistoryModule,
   ],
   providers: [],
   bootstrap: [AppComponent]
