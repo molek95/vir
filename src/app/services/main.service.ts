@@ -20,4 +20,10 @@ export class MainService {
     console.log(requestBody);
     return this.httpClient.post(url, requestBody, { headers });
   }
+
+  sendPutRequest(url: string, requestBody: any, headers: any) {
+    console.log('PUT REQUEST');
+    headers = new HttpHeaders(headers);
+    return this.httpClient.put(url, requestBody, { headers })
+  }
 }

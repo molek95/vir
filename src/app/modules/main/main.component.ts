@@ -31,7 +31,8 @@ export class MainComponent implements OnInit {
     this.selectedRequestMethod = 'GET';
     this.requestMethods = [
       'GET',
-      'POST'
+      'POST',
+      'PUT'
     ];
     this.endpoint = '';
     this.responseError = '';
@@ -155,6 +156,17 @@ export class MainComponent implements OnInit {
         });
         break;
       }
+      case 'PUT': {
+        this.mainService.sendPutRequest(this.endpoint, this.constructObject('Body'), this.constructObject('Headers')).subscribe(res => {
+          this.isLoading = false;
+          this.responseData = JSON.stringify(res, undefined, 4);
+        },
+        error => {
+          this.isLoading = false;
+          console.log(error);
+          this.responseError = JSON.stringify(error, undefined, 4);
+        })
+      }
     }
 
     this.saveRequest(this.selectedRequestMethod);
@@ -174,7 +186,7 @@ export class MainComponent implements OnInit {
       method: this.selectedRequestMethod,
       headers: this.constructObject('Headers')
     };
-    if (requestType === 'POST') {
+    if (requestType === 'POST' || requestType === 'PUT') {
       requestObject['body'] = this.constructObject('Body');
     }
     const transaction = this.indexedDB.transaction('requestHistory', 'readwrite');
@@ -188,7 +200,7 @@ export class MainComponent implements OnInit {
     this.selectedRequestMethod = request.method;
     this.endpoint = request.endpoint;
     this.requestHeaders = this.deconstructObject(request.headers, 'Headers');
-    if (request.method === 'POST') {
+    if (request.method === 'POST' || request.method === 'PUT') {
       this.requestBody = this.deconstructObject(request.body, 'Body');
     }
   }
